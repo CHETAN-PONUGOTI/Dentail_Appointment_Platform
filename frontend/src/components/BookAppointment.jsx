@@ -10,7 +10,7 @@ const BookAppointment = ({ dentist, onBack }) => {
         e.preventDefault();
         setStatus('submitting');
         try {
-            await axios.post('http://localhost:5000/api/appointments', { ...formData, dentistId: dentist.id });
+            await axios.post('https://dentail-appointment-platform-3.onrender.com/api/appointments', { ...formData, dentistId: dentist.id });
             setStatus('success');
         } catch (err) {
             setStatus('error');

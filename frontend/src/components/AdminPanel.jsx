@@ -7,7 +7,7 @@ const AdminPanel = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/appointments')
+        axios.get('https://dentail-appointment-platform-3.onrender.com/api/appointments')
             .then(res => {
                 setAppointments(res.data);
                 setLoading(false);

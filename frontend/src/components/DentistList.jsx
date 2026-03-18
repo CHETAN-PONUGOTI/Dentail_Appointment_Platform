@@ -7,7 +7,7 @@ const DentistList = ({ onBook }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/dentists')
+        axios.get('https://dentail-appointment-platform-3.onrender.com/api/dentists')
             .then(res => {
                 setDentists(res.data);
                 setLoading(false);

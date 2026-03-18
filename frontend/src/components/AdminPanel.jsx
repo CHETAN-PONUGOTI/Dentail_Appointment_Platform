@@ -1,19 +1,35 @@
+// src/components/AdminPanel.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Calendar, User, Clock, ClipboardList } from 'lucide-react';
+import { Calendar, User, Clock, ClipboardList, Trash2 } from 'lucide-react';
 
 const AdminPanel = () => {
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    const fetchAppointments = () => {
         axios.get('https://dentail-appointment-platform-3.onrender.com/api/appointments')
             .then(res => {
                 setAppointments(res.data);
                 setLoading(false);
             })
             .catch(() => setLoading(false));
+    };
+
+    useEffect(() => {
+        fetchAppointments();
     }, []);
+
+    const handleDelete = async (id) => {
+        if (window.confirm("Are you sure you want to cancel this appointment?")) {
+            try {
+                await axios.delete(`https://dentail-appointment-platform-3.onrender.com/api/appointments/${id}`);
+                setAppointments(appointments.filter(app => app.id !== id));
+            } catch (err) {
+                alert("Failed to delete appointment");
+            }
+        }
+    };
 
     if (loading) return <div className="text-center py-20 font-medium text-gray-500 text-lg">Loading database...</div>;
 
@@ -37,7 +53,7 @@ const AdminPanel = () => {
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Patient Details</th>
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Schedule</th>
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Assigned Dentist</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Status</th>
+                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
@@ -70,8 +86,14 @@ const AdminPanel = () => {
                                         <div className="text-gray-900 font-medium">{app.dentistName}</div>
                                         <div className="text-xs text-blue-600 font-bold uppercase tracking-tighter">{app.clinicName}</div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-black rounded-full uppercase">Confirmed</span>
+                                    <td className="px-6 py-5 text-center">
+                                        <button 
+                                            onClick={() => handleDelete(app.id)}
+                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors inline-flex items-center"
+                                            title="Cancel Appointment"
+                                        >
+                                            <Trash2 className="w-5 h-5" />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}

@@ -19,6 +19,12 @@ const Appointment = {
         db.all(query, [], (err, rows) => {
             callback(err, rows);
         });
+    },
+    delete: (id, callback) => {
+        const query = `DELETE FROM appointments WHERE id = ?`;
+        db.run(query, [id], function(err) {
+            callback(err, this.changes);
+        });
     }
 };
 

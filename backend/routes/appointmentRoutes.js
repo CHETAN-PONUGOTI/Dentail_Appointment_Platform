@@ -25,12 +25,10 @@ router.get('/', (req, res) => {
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
     
-    const query = `DELETE FROM appointments WHERE id = ?`;
-    
-    db.run(query, [id], function(err) {
+    Appointment.delete(id, (err, changes) => {
         if (err) return res.status(500).json({ error: err.message });
         
-        if (this.changes === 0) {
+        if (changes === 0) {
             return res.status(404).json({ message: "Appointment not found" });
         }
         
